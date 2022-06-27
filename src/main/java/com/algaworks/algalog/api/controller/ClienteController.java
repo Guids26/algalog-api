@@ -3,6 +3,7 @@ package com.algaworks.algalog.api.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algalog.domain.model.Cliente;
 import com.algaworks.algalog.domain.repository.ClienteRepository;
+import com.algaworks.algalog.domain.service.CatalogoClienteService;
 
 import lombok.AllArgsConstructor;
 
@@ -25,6 +27,7 @@ import lombok.AllArgsConstructor;
 public class ClienteController {
 
 	private ClienteRepository clienteRepository;
+	private CatalogoClienteService catalogoClienteService;
 
 	@GetMapping("/clientes")
 	public List<Cliente> listar(HttpServletResponse response) {
@@ -40,15 +43,8 @@ public class ClienteController {
 	
 	@PostMapping("/clientes")
 	@ResponseStatus(HttpStatus.CREATED) 
-	public ResponseEntity<Cliente> adicionar(@RequestBody Cliente cliente) {
-		List<Cliente>clienteExistentesComEmail = clienteRepository.findByEmail(cliente.getEmail());
-		//System.out.println(clienteExistentesComEmail.isEmpty());
-		if(clienteExistentesComEmail.isEmpty()) {
-			return ResponseEntity.ok(clienteRepository.save(cliente));
-		}else {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-		}
-		
+	public ResponseEntity<Cliente> adicionar(@Valid @RequestBody Cliente cliente) {
+			return ResponseEntity.ok(catalogoClienteService.salvar(cliente));
 	}
 	
 	@PutMapping("/clientes/{clienteId}")
@@ -57,7 +53,7 @@ public class ClienteController {
 			return ResponseEntity.notFound().build();
 		}
 		cliente.setId(clienteId);
-		cliente = clienteRepository.save(cliente);
+		cliente = catalogoClienteService.salvar(cliente);
 		return ResponseEntity.ok(cliente);
 		
 	}
@@ -67,7 +63,7 @@ public class ClienteController {
 		if(!clienteRepository.existsById(clienteId)) {
 			return ResponseEntity.notFound().build();
 		}
-		clienteRepository.deleteById(clienteId);
+		catalogoClienteService.excluir(clienteId);
 		System.out.println(clienteId);
 		return ResponseEntity.noContent().build();
 	}
