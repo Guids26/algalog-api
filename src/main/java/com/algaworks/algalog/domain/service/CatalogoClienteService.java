@@ -16,15 +16,18 @@ public class CatalogoClienteService {
 	
 	
 	public Cliente buscar(Long clienteId) {
+		System.out.println("teste pqp");
 			return clienteRepository.findById(clienteId)
 					.orElseThrow(() -> new NegocioException("Cliente não encontrado"));
 	}
 	
 	@Transactional
 	public Cliente salvar(Cliente cliente) {
-		boolean emailExistente = clienteRepository.findByEmail(cliente.getEmail()).isEmpty();
+		boolean emailExistente = clienteRepository.findByEmail(cliente.getEmail())
+				.stream()
+				.anyMatch(clienteExistente -> !clienteExistente.equals(cliente));
 		
-		if(!emailExistente) {
+		if(emailExistente) {
 			throw new NegocioException("Já existe um cliente cadastrado com este e-mail.");
 		}
 		
