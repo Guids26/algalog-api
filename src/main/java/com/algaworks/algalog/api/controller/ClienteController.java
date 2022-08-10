@@ -55,7 +55,6 @@ public class ClienteController {
 		cliente.setId(clienteId);
 		cliente = catalogoClienteService.salvar(cliente);
 		return ResponseEntity.ok(cliente);
-		
 	}
 	
 	@DeleteMapping("/cliente/{clienteId}")
@@ -67,5 +66,5 @@ public class ClienteController {
 		System.out.println(clienteId);
 		return ResponseEntity.noContent().build();
 	}
-
+	
 }
