@@ -16,6 +16,7 @@ public class CatalogoClienteService {
 	
 	
 	public Cliente buscar(Long clienteId) {
+		System.out.println("teste pqp");
 			return clienteRepository.findById(clienteId)
 					.orElseThrow(() -> new NegocioException("Cliente não encontrado"));
 	}
