@@ -1,4 +1,4 @@
-package com.algaworks.algalog.api;
+package com.algaworks.algalog.api.assembler;
 
 import java.util.List;
 import java.util.stream.Collectors;
